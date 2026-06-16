@@ -2,7 +2,6 @@ Flask
 python-dotenv
 psycopg2-binary
 gunicorn
-（他のライブラリ）
 render_template
 request
 redirect
