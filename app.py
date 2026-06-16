@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, session, url_for, s
 import os
 import json
 import google.generativeai as genai
+from werkzeug.utils import secure_filename # ★追加: 安全なファイル名処理用
 
 app = Flask(__name__)
 app.secret_key = 'lab_automation_secret_key'
@@ -12,9 +13,12 @@ if not os.path.exists(UPLOAD_FOLDER):
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # ==========================================
-# Gemini APIの設定（取得したAPIキーを入力してください）
+# Gemini APIの設定
 # ==========================================
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
+if not GEMINI_API_KEY:
+    print("【警告】GEMINI_API_KEYが環境変数に設定されていません。")
+
 genai.configure(api_key=GEMINI_API_KEY)
 
 
@@ -62,17 +66,17 @@ def upload_file():
     if file.filename == '':
         return 'ファイルが選択されていません'
 
-    # PNGに加えて、.jpg と .jpeg も許可するように修正
     if file and file.filename.lower().endswith(('.png', '.jpg', '.jpeg')):
-        filename = file.filename
+        # ★修正: アップロードされたファイル名を安全な形式に変換
+        filename = secure_filename(file.filename)
         img_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-        file.save(img_path) # アップロードされた画像をそのまま保存
+        file.save(img_path)
 
         exp_type = session.get('experiment_type')
+        gemini_file = None # finallyブロックで参照するため初期化
 
         # 2. Gemini APIで数値を読み取る
         try:
-            # 保存した画像をそのままGeminiにアップロード（PNGもJPGも対応）
             gemini_file = genai.upload_file(img_path)
             
             # JSON形式で確実に出力させるための設定
@@ -95,6 +99,13 @@ def upload_file():
             
         except Exception as e:
             return f"Gemini API解析エラー: {type(e).__name__}: {e}"
+        finally:
+            # ★修正: 解析終了後にGeminiサーバー上のファイルを必ず削除
+            if gemini_file:
+                try:
+                    genai.delete_file(gemini_file.name)
+                except Exception as cleanup_error:
+                    print(f"ファイル削除エラー: {cleanup_error}")
 
         # 3. 取得した数値リストを使って template.js を書き換える
         script_name = "generated_script.js"
@@ -108,7 +119,6 @@ def upload_file():
         # 成功した場合のみ結果画面へ
         return render_template('result.html', filename=filename, exp_type=exp_type, script_name=script_name, detected_numbers=axis_numbers)
 
-    # エラーメッセージもPNG/JPG用に変更
     return "対応していないファイル形式です（PNGまたはJPGファイルをアップロードしてください）。"
 
 # ==========================================
