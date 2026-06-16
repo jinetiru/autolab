@@ -78,15 +78,9 @@ def upload_file():
 
         # 2. Gemini APIで数値を読み取る
         try:
-            gemini_file = genai.upload_file(img_path)
+            # ★修正①: 新しいアップロードメソッド (clientを経由する)
+            gemini_file = client.files.upload(file=img_path)
             
-            # JSON形式で確実に出力させるための設定
-            model = genai.GenerativeModel(
-                'gemini-2.5-flash',
-                generation_config={"response_mime_type": "application/json"}
-            )
-            
-            # プロンプト（指示）
             prompt = """
             このグラフ画像を解析し、縦軸（Y軸）と横軸（X軸）の目盛りとして記述されている「数値」をすべて抽出してください。
             ラベル名や単位（例: degree, Intensityなど）は除外し、純粋な数字のみを取り出してください。
@@ -94,17 +88,24 @@ def upload_file():
             {"numbers": ["10", "20", "30", "40", "-10", "0", ...]}
             """
             
-            response = model.generate_content([gemini_file, prompt])
+            # ★修正②: 新しいコンテンツ生成メソッド (clientを経由し、configの指定方法も変更)
+            response = client.models.generate_content(
+                model='gemini-2.5-flash',
+                contents=[gemini_file, prompt],
+                config=types.GenerateContentConfig(
+                    response_mime_type="application/json",
+                )
+            )
             ai_result = json.loads(response.text)
             axis_numbers = ai_result.get("numbers", [])
             
         except Exception as e:
             return f"Gemini API解析エラー: {type(e).__name__}: {e}"
         finally:
-            # ★修正: 解析終了後にGeminiサーバー上のファイルを必ず削除
             if gemini_file:
                 try:
-                    genai.delete_file(gemini_file.name)
+                    # ★修正③: 新しいファイル削除メソッド (clientを経由する)
+                    client.files.delete(name=gemini_file.name)
                 except Exception as cleanup_error:
                     print(f"ファイル削除エラー: {cleanup_error}")
 
