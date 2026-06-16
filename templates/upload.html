@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>Upload & Analyze - Lab Automation</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <main class="upload-wrapper">
+        <section class="upload-container">
+            <header>
+                <!-- セッションから渡された実験種別を表示 -->
+                <h1>{{ exp_type.upper() }} 解析データのアップロード</h1>
+                <p>Originから出力した .eps ファイルを選択してください。</p>
+            </header>
+
+            <form action="/upload_file" method="POST" enctype="multipart/form-data" id="upload-form">
+                <div class="file-area">
+                    <input type="file" name="file" id="file_input" accept=".eps" required>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-submit" id="submit-btn">AI解析とスクリプト生成を開始</button>
+                </div>
+            </form>
+
+            <!-- 解析中のローディング表示（後でCSSで装飾） -->
+            <div id="loading" style="display:none;">
+                <p>AIが図の様式を判定し、スクリプトを作成しています...</p>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // 送信時にローディングを表示する簡単な処理
+        document.getElementById('upload-form').onsubmit = function() {
+            document.getElementById('submit-btn').disabled = true;
+            document.getElementById('loading').style.display = 'block';
+        };
+    </script>
+</body>
+</html>

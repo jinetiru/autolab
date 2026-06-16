@@ -1,0 +1,594 @@
+/* フォントの読み込み（すっきりと読みやすいNoto Sans JP） */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap');
+
+/* 全体のカラー変数定義（変更が簡単なようにまとめています） */
+:root {
+    --primary-color: #0052cc;      /* 信頼感のある深いブルー */
+    --primary-hover: #003d99;      /* ホバー時のブルー */
+    --bg-color: #eef2f7;           /* 背景色（薄いグレーブルー） */
+    --card-bg: rgba(255, 255, 255, 0.85); /* 半透明のガラス風背景 */
+    --text-main: #2c3e50;          /* メインテキスト色 */
+    --text-muted: #7f8c8d;         /* サブテキスト色 */
+    --border-color: #cbd5e1;       /* 枠線の色 */
+    --focus-ring: rgba(0, 82, 204, 0.2);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Noto Sans JP', sans-serif;
+    background-color: var(--bg-color);
+    /* 画面全体に微かなグラデーションをかけ、奥行きを出します */
+    background-image: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+    color: var(--text-main);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* --- レイアウト・カード部分 --- */
+.login-wrapper {
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+}
+
+.login-card {
+    background-color: var(--card-bg);
+    /* 背景を少しぼかす効果（ガラスモーフィズム） */
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 12px;
+    padding: 40px 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+/* --- ヘッダー部分 --- */
+.login-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.login-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--text-main);
+}
+
+.login-subtitle {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+/* --- フォーム部分 --- */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin-bottom: 6px;
+    color: var(--text-main);
+}
+
+.form-input {
+    width: 100%;
+    padding: 12px;
+    font-size: 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background-color: #ffffff;
+    transition: all 0.3s ease;
+}
+
+.form-input::placeholder {
+    color: #a0aec0;
+}
+
+/* 入力中のハイライト（どこを入力しているか分かりやすくする） */
+.form-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px var(--focus-ring);
+}
+
+/* --- オプション・ボタン部分 --- */
+.form-options {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.remember-me input {
+    margin-right: 6px;
+}
+
+.form-actions {
+    margin-top: 10px;
+}
+
+.btn-submit {
+    width: 100%;
+    padding: 12px;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #ffffff;
+    background-color: var(--primary-color);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.btn-submit:hover {
+    background-color: var(--primary-hover);
+}
+
+.btn-submit:active {
+    transform: translateY(1px); /* クリック時の押し込み感 */
+}
+
+/* --- フッター部分 --- */
+.login-footer {
+    margin-top: 25px;
+    text-align: center;
+}
+
+.copyright {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+/* =========================================
+   選択画面 (Select Experiment) 用スタイル
+   ========================================= */
+
+.select-wrapper {
+    width: 100%;
+    max-width: 800px; /* ログイン画面より広くする */
+    padding: 20px;
+}
+
+.select-container {
+    background-color: var(--card-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 12px;
+    padding: 40px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+.select-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.select-header h1 {
+    font-size: 1.5rem;
+    color: var(--text-main);
+    margin-bottom: 8px;
+}
+
+.select-header p {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+/* --- カード型ラジオボタンのレイアウト --- */
+.experiment-options {
+    display: grid;
+    /* 画面幅に合わせて自動で2列〜3列に調整される魔法のコード */
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-bottom: 30px;
+}
+
+.experiment-card {
+    cursor: pointer;
+    display: block;
+}
+
+/* デフォルトの丸いラジオボタンを視覚的に隠す */
+.experiment-card input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+}
+
+/* カードの見た目 */
+.card-content {
+    background-color: #ffffff;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    padding: 20px 16px;
+    height: 100%;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.experiment-name {
+    display: block;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 8px;
+}
+
+.experiment-desc {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    line-height: 1.4;
+}
+
+/* --- マウスオーバー（ホバー）時の挙動 --- */
+.experiment-card:hover .card-content {
+    border-color: #a0aec0;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* --- ラジオボタンが「選択された」時の挙動 --- */
+.experiment-card input[type="radio"]:checked + .card-content {
+    border-color: var(--primary-color);
+    background-color: rgba(0, 82, 204, 0.03); /* ほんのり青背景 */
+    box-shadow: 0 0 0 2px var(--focus-ring);
+}
+
+.experiment-card input[type="radio"]:checked + .card-content .experiment-name {
+    color: var(--primary-color);
+}
+
+/* --- ボタンエリア --- */
+.form-actions {
+    display: flex;
+    justify-content: center;
+    gap: 16px; /* ボタン同士の隙間 */
+    margin-top: 20px;
+}
+
+.btn-next {
+    padding: 12px 32px;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #ffffff;
+    background-color: var(--primary-color);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.btn-next:hover {
+    background-color: var(--primary-hover);
+}
+
+.btn-next:active {
+    transform: translateY(1px);
+}
+
+.btn-back {
+    padding: 12px 32px;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text-main);
+    background-color: #e2e8f0;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: background-color 0.2s ease;
+    display: flex;
+    align-items: center;
+}
+
+.btn-back:hover {
+    background-color: #cbd5e1;
+}
+
+.select-footer {
+    margin-top: 30px;
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+        /* ページ全体を横並びにする設定 */
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        .layout-wrapper {
+            display: flex;
+            min-height: 100vh; /* 画面全体の高さを確保 */
+        }
+        .select-wrapper {
+            flex: 1; /* メインコンテンツが残りの幅をすべて使う */
+            /* 既存のstyle.cssによる中央揃えなどはそのまま適用されます */
+        }
+
+        /* 右サイドバーの設定 */
+        .sidebar-right {
+            width: 320px; /* サイドバーの幅 */
+            background-color: #f8f9fa; /* 背景色 */
+            border-left: 1px solid #dee2e6;
+            padding: 24px;
+            box-sizing: border-box;
+            overflow-y: auto; /* スクリプトが多くなった場合はスクロール可能に */
+        }
+        .sidebar-right h2 {
+            font-size: 1.1rem;
+            margin-top: 0;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ced4da;
+            padding-bottom: 10px;
+            color: #343a40;
+        }
+        .script-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .script-list li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .script-name {
+            font-size: 0.95rem;
+            color: #495057;
+            word-break: break-all;
+            padding-right: 10px;
+        }
+        .btn-download {
+            background-color: #0d6efd;
+            color: #fff;
+            text-decoration: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            white-space: nowrap;
+            transition: background-color 0.2s;
+        }
+        .btn-download:hover {
+            background-color: #0b5ed7;
+        }
+/* =========================================
+   アップロード画面 (Upload) 用スタイル
+   ========================================= */
+
+.upload-wrapper {
+    width: 100%;
+    max-width: 600px; /* 適切な幅に調整 */
+    padding: 20px;
+}
+
+.upload-container {
+    background-color: var(--card-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 12px;
+    padding: 40px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    text-align: center; /* 全体を中央揃え */
+}
+
+.upload-container header {
+    margin-bottom: 30px;
+}
+
+.upload-container header h1 {
+    font-size: 1.4rem;
+    color: var(--text-main);
+    margin-bottom: 10px;
+}
+
+.upload-container header p {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+/* --- ファイルアップロードエリア --- */
+.file-area {
+    position: relative;
+    /* 点線の枠にして「ここにファイルを置く」感を出す */
+    border: 2px dashed var(--border-color);
+    border-radius: 8px;
+    padding: 50px 20px;
+    background-color: #f8fafc;
+    transition: all 0.3s ease;
+    margin-bottom: 25px;
+}
+
+.file-area:hover {
+    border-color: var(--primary-color);
+    background-color: rgba(0, 82, 204, 0.02);
+}
+
+/* input[type="file"]自体のレイアウト */
+.file-area input[type="file"] {
+    width: 100%;
+    max-width: 350px;
+    margin: 0 auto;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: var(--text-main);
+}
+
+/* ファイル選択ボタン（ブラウザ標準）のカスタマイズ */
+.file-area input[type="file"]::file-selector-button {
+    padding: 8px 16px;
+    margin-right: 16px;
+    background-color: #e2e8f0;
+    border: none;
+    border-radius: 4px;
+    color: var(--text-main);
+    cursor: pointer;
+    transition: background-color 0.2s;
+    font-weight: 500;
+}
+
+.file-area input[type="file"]::file-selector-button:hover {
+    background-color: #cbd5e1;
+}
+
+/* --- 送信ボタン（幅を広げて押しやすく） --- */
+.upload-container .btn-submit {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    display: block;
+}
+
+/* --- ローディング表示の装飾 --- */
+#loading {
+    margin-top: 25px;
+    padding: 20px;
+    background-color: rgba(0, 82, 204, 0.05); /* 薄い青背景 */
+    border-left: 4px solid var(--primary-color);
+    border-radius: 4px;
+    color: var(--text-main);
+    font-size: 0.95rem;
+    font-weight: 500;
+    /* アニメーションの適用 */
+    animation: pulse 1.5s infinite;
+}
+
+/* ふわふわ点滅するアニメーション（処理中であることを伝える） */
+@keyframes pulse {
+    0% { opacity: 0.6; }
+    50% { opacity: 1; }
+    100% { opacity: 0.6; }
+}
+/* =========================================
+   結果・完了画面 (Result) 用スタイル
+   ========================================= */
+
+/* 今回のHTMLの ".container" をこれまでのカードデザインに合わせる */
+.container {
+    width: 100%;
+    max-width: 600px;
+    background-color: var(--card-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 12px;
+    padding: 40px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    text-align: center;
+}
+
+.container h2 {
+    font-size: 1.5rem;
+    color: var(--text-main);
+    margin-bottom: 8px;
+}
+
+.success-message {
+    font-size: 1rem;
+    /* 成功・完了を示すため、少し明るく前向きなブルーを採用 */
+    color: #0284c7; 
+    font-weight: 700;
+    margin-bottom: 30px;
+}
+
+/* --- 抽出データ・生成結果を表示するボックス --- */
+.info-box {
+    background-color: #f8fafc;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 24px;
+    margin-bottom: 30px;
+    text-align: left;
+}
+
+.info-box p {
+    font-size: 0.95rem;
+    color: var(--text-main);
+    margin-bottom: 12px;
+    line-height: 1.5;
+    display: flex;
+    align-items: flex-start;
+}
+
+.info-box p:last-child {
+    margin-bottom: 0;
+}
+
+/* 項目名（太字）の幅を固定し、表のように揃えて見やすくするテクニック */
+.info-box strong {
+    display: inline-block;
+    width: 140px; 
+    flex-shrink: 0; /* スマホ画面で文字が潰れるのを防ぐ */
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+/* --- ボタンエリア --- */
+.button-group {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    justify-content: center;
+}
+
+/* 画面の横幅に余裕があるとき（PCやタブレット）はボタンを横並びにする */
+@media (min-width: 500px) {
+    .button-group {
+        flex-direction: row;
+    }
+}
+
+/* ボタン共通スタイル */
+.btn {
+    padding: 12px 24px;
+    font-size: 1rem;
+    font-weight: 700;
+    border-radius: 6px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn:active {
+    transform: translateY(1px);
+}
+
+/* プライマリ（メイン）ボタン：ダウンロードなど一番押してほしいボタン */
+.btn-primary {
+    color: #ffffff;
+    background-color: var(--primary-color);
+    border: none;
+    flex: 1; /* 横並び時に幅を均等化 */
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-hover);
+}
+
+/* セカンダリ（サブ）ボタン：戻るなど次に押す頻度が高いボタン */
+.btn-secondary {
+    color: var(--text-main);
+    background-color: #e2e8f0;
+    border: none;
+    flex: 1;
+}
+
+.btn-secondary:hover {
+    background-color: #cbd5e1;
+}

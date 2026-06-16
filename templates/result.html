@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>スクリプト生成完了 - Lab Automation</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <div class="container">
+        <h2>処理完了</h2>
+        <p class="success-message">Illustrator用スクリプトの準備ができました！</p>
+
+        <div class="info-box">
+            <p><strong>アップロードしたファイル：</strong> {{ filename }}</p>
+            <p><strong>実験種別：</strong> {{ exp_type }}</p>
+            <p><strong>生成スクリプト名：</strong> {{ script_name }}</p>
+        </div>
+
+        <div class="button-group">
+            <a href="{{ url_for('download_file', filename=script_name) }}" class="btn btn-primary">
+                スクリプトをダウンロード
+            </a>
+
+            <a href="{{ url_for('select_experiment') }}" class="btn btn-secondary">
+                別の実験ファイルを作る
+            </a>
+        </div>
+    </div>
+
+</body>
+</html>

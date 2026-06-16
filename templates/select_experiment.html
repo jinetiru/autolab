@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Experiment - Lab Automation</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    
+   
+</head>
+<body>
+
+    <div class="layout-wrapper">
+
+        <main class="select-wrapper">
+            <section class="select-container">
+                
+                <header class="select-header">
+                    <h1>分析データの選択</h1>
+                    <p>自動解析を行う実験の種類を選択してください</p>
+                </header>
+
+                <form action="/analyze" method="POST" class="experiment-form">
+                    
+                    <div class="experiment-options">
+                        
+                        <label class="experiment-card">
+                            <input type="radio" name="experiment_type" value="xrd" required>
+                            <div class="card-content">
+                                <span class="experiment-name">XRD（X線回折分析）</span>
+                                <p class="experiment-desc">回折パターンのピーク同定・Rietveld解析データの処理</p>
+                            </div>
+                        </label>
+
+                        <label class="experiment-card">
+                            <input type="radio" name="experiment_type" value="dc conductivity">
+                            <div class="card-content">
+                                <span class="experiment-name">直流伝導率測定</span>
+                                <p class="experiment-desc">アレニウスプロット 電圧・電流</p>
+                            </div>
+                        </label>
+
+                        <label class="experiment-card">
+                            <input type="radio" name="experiment_type" value="ac conductivity">
+                            <div class="card-content">
+                                <span class="experiment-name">交流伝導率測定</span>
+                                <p class="experiment-desc">交流プロット</p>
+                            </div>
+                        </label>
+
+                        <label class="experiment-card">
+                            <input type="radio" name="experiment_type" value="seebeck">
+                            <div class="card-content">
+                                <span class="experiment-name">ゼーベック測定</span>
+                                <p class="experiment-desc"></p>
+                            </div>
+                        </label>
+
+                        <label class="experiment-card">
+                            <input type="radio" name="experiment_type" value="tg-dta">
+                            <div class="card-content">
+                                <span class="experiment-name">TG-DTA測定</span>
+                                <p class="experiment-desc"></p>
+                            </div>
+                        </label>
+
+                        <label class="experiment-card">
+                            <input type="radio" name="experiment_type" value="spectral transmittance">
+                            <div class="card-content">
+                                <span class="experiment-name">分光透過率測定</span>
+                                <p class="experiment-desc"></p>
+                            </div>
+                        </label>
+
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn-next">解析へ進む</button>
+                        <a href="/" class="btn-back">ログアウト</a>
+                    </div>
+
+                </form>
+
+                <footer class="select-footer">
+                    <p>&copy; .</p>
+                </footer>
+
+            </section>
+        </main>
+
+        <aside class="sidebar-right">
+            <h2>Ai スクリプト</h2>
+            <ul class="script-list">
+                
+                <li>
+                    <span class="script-name">横軸結合</span>
+                    <a href="{{ url_for('static', filename='scripts/横軸結合.js') }}" download class="btn-download">DL</a>
+                </li>
+
+                <li>
+                    <span class="script-name">縦軸結合</span>
+                    <a href="{{ url_for('static', filename='scripts/縦軸結合.js') }}" download class="btn-download">DL</a>
+                </li>
+
+               
+
+            </ul>
+        </aside>
+
+    </div>
+
+</body>
+</html>
