@@ -2,12 +2,5 @@ Flask
 python-dotenv
 psycopg2-binary
 gunicorn
-render_template
-redirect
-session
-url_for
-send_from_directory
-os
-json
-Image
-google.generativeai
+Pillow
+google-generativeai
