@@ -14,7 +14,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 # ==========================================
 # Gemini APIの設定（取得したAPIキーを入力してください）
 # ==========================================
-GEMINI_API_KEY = "AIzaSyCLfXsbCv03jzHM5JVHYfKBwxNK_IyiYD0"
+GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
 genai.configure(api_key=GEMINI_API_KEY)
 
 
@@ -94,7 +94,7 @@ def upload_file():
             axis_numbers = ai_result.get("numbers", [])
             
         except Exception as e:
-            return f"Gemini API解析エラー: {e}"
+            return f"Gemini API解析エラー: {type(e).__name__}: {e}"
 
         # 3. 取得した数値リストを使って template.js を書き換える
         script_name = "generated_script.js"
