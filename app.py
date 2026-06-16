@@ -1,7 +1,6 @@
 from flask import Flask, render_template, request, redirect, session, url_for, send_from_directory
 import os
 import json
-# 画像変換が不要になったため、from PIL import Image は削除しました
 import google.generativeai as genai
 
 app = Flask(__name__)
@@ -63,18 +62,18 @@ def upload_file():
     if file.filename == '':
         return 'ファイルが選択されていません'
 
-    # EPSからPNGに変更
-    if file and file.filename.lower().endswith('.png'):
+    # PNGに加えて、.jpg と .jpeg も許可するように修正
+    if file and file.filename.lower().endswith(('.png', '.jpg', '.jpeg')):
         filename = file.filename
-        png_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-        file.save(png_path) # そのまま保存
+        img_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        file.save(img_path) # アップロードされた画像をそのまま保存
 
         exp_type = session.get('experiment_type')
 
         # 2. Gemini APIで数値を読み取る
         try:
-            # PNG画像をそのままGeminiにアップロード
-            gemini_file = genai.upload_file(png_path)
+            # 保存した画像をそのままGeminiにアップロード（PNGもJPGも対応）
+            gemini_file = genai.upload_file(img_path)
             
             # JSON形式で確実に出力させるための設定
             model = genai.GenerativeModel(
@@ -104,22 +103,18 @@ def upload_file():
         try:
             generate_dynamic_js("template.js", output_js_path, axis_numbers)
         except Exception as e:
-            # 失敗した場合はここで処理を止め、画面にエラーを表示する
             return f"スクリプト生成エラー: {e}"
 
         # 成功した場合のみ結果画面へ
         return render_template('result.html', filename=filename, exp_type=exp_type, script_name=script_name, detected_numbers=axis_numbers)
 
-    # エラーメッセージもPNG用に変更
-    return "対応していないファイル形式です（PNGファイルをアップロードしてください）。"
+    # エラーメッセージもPNG/JPG用に変更
+    return "対応していないファイル形式です（PNGまたはJPGファイルをアップロードしてください）。"
 
 # ==========================================
 # JS生成用ヘルパー関数
 # ==========================================
 def generate_dynamic_js(template_path, output_path, numbers):
-    """
-    Geminiが抽出した数値のリストを使って、JSの条件式を動的に生成する関数
-    """
     if not os.path.exists(template_path):
         raise FileNotFoundError(f"テンプレートファイルが見つかりません: {template_path} (app.pyと同じ階層に置いてください)")
         
@@ -138,9 +133,6 @@ def generate_dynamic_js(template_path, output_path, numbers):
     
 @app.route('/download/<filename>')
 def download_file(filename):
-    """
-    生成されたスクリプトファイルをブラウザにダウンロードさせるためのルート
-    """
     return send_from_directory(
         app.config['UPLOAD_FOLDER'], 
         filename, 
