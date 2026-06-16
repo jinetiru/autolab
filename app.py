@@ -1,7 +1,8 @@
 from flask import Flask, render_template, request, redirect, session, url_for, send_from_directory
 import os
 import json
-import google.generativeai as genai
+from google import genai
+from google.genai import types
 from werkzeug.utils import secure_filename # ★追加: 安全なファイル名処理用
 
 app = Flask(__name__)
@@ -19,8 +20,8 @@ GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
 if not GEMINI_API_KEY:
     print("【警告】GEMINI_API_KEYが環境変数に設定されていません。")
 
-genai.configure(api_key=GEMINI_API_KEY)
-
+# 新しいClientの初期化
+client = genai.Client(api_key=GEMINI_API_KEY)
 
 @app.route('/')
 def index():
