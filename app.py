@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, session, url_for, send_from_directory
 import os
 import json
-from PIL import Image
+# 画像変換が不要になったため、from PIL import Image は削除しました
 import google.generativeai as genai
 
 app = Flask(__name__)
@@ -19,7 +19,6 @@ GEMINI_API_KEY = "AIzaSyCLfXsbCv03jzHM5JVHYfKBwxNK_IyiYD0"
 genai.configure(api_key=GEMINI_API_KEY)
 
 
-# (中略：index, login, select_experiment, analyze, upload_pageは元のまま)
 @app.route('/')
 def index():
     return render_template('login.html')
@@ -64,31 +63,17 @@ def upload_file():
     if file.filename == '':
         return 'ファイルが選択されていません'
 
-    if file and file.filename.lower().endswith('.eps'):
+    # EPSからPNGに変更
+    if file and file.filename.lower().endswith('.png'):
         filename = file.filename
-        eps_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-        file.save(eps_path)
+        png_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        file.save(png_path) # そのまま保存
 
         exp_type = session.get('experiment_type')
 
-        # 1. EPSをPNGに変換する（GeminiはEPSを直接読めないため）
-        png_path = os.path.splitext(eps_path)[0] + '.png'
-        try:
-            img = Image.open(eps_path)
-            # EPSの背景が透過している場合があるため、白背景を追加して保存
-            img.load(scale=2) # 画質を少し上げる
-            if img.mode in ('RGBA', 'LA') or (img.mode == 'P' and 'transparency' in img.info):
-                bg = Image.new("RGB", img.size, (255, 255, 255))
-                bg.paste(img, mask=img.split()[3])
-                bg.save(png_path, 'PNG')
-            else:
-                img.save(png_path, 'PNG')
-        except Exception as e:
-            return f"画像変換エラー（Ghostscriptがインストールされているか確認してください）: {e}"
-
         # 2. Gemini APIで数値を読み取る
         try:
-            # 画像をGeminiにアップロード
+            # PNG画像をそのままGeminiにアップロード
             gemini_file = genai.upload_file(png_path)
             
             # JSON形式で確実に出力させるための設定
@@ -125,7 +110,8 @@ def upload_file():
         # 成功した場合のみ結果画面へ
         return render_template('result.html', filename=filename, exp_type=exp_type, script_name=script_name, detected_numbers=axis_numbers)
 
-    return "対応していないファイル形式です（EPSファイルをアップロードしてください）。"
+    # エラーメッセージもPNG用に変更
+    return "対応していないファイル形式です（PNGファイルをアップロードしてください）。"
 
 # ==========================================
 # JS生成用ヘルパー関数
@@ -134,7 +120,6 @@ def generate_dynamic_js(template_path, output_path, numbers):
     """
     Geminiが抽出した数値のリストを使って、JSの条件式を動的に生成する関数
     """
-    # テンプレートが存在するか先にチェックする！
     if not os.path.exists(template_path):
         raise FileNotFoundError(f"テンプレートファイルが見つかりません: {template_path} (app.pyと同じ階層に置いてください)")
         
@@ -159,7 +144,7 @@ def download_file(filename):
     return send_from_directory(
         app.config['UPLOAD_FOLDER'], 
         filename, 
-        as_attachment=True # これを入れることでブラウザで開かず「ダウンロード」になります
+        as_attachment=True
     )
 
 if __name__ == '__main__':
