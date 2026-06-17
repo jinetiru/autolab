@@ -6,7 +6,6 @@ if (documents.length > 0) {
     for (var i = 0; i < textItems.length; i++) {
         var textItem = textItems[i];
         
-        // Python側でここに「10」や「20」など抽出した数値の条件式を自動挿入します
         if (/*_CONDITION_*/) {
             
            
